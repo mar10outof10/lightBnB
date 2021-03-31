@@ -40,7 +40,7 @@ CREATE TABLE reservations (
   end_date DATE NOT NULL
 );
 
-CREATE TABLE propery_reviews (
+CREATE TABLE property_reviews (
   id SERIAL PRIMARY KEY NOT NULL,
   guest_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   property_id INTEGER REFERENCES properties(id) ON DELETE CASCADE,
