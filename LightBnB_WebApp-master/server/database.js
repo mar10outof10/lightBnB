@@ -1,5 +1,3 @@
-const properties = require('./json/properties.json');
-
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -148,12 +146,15 @@ exports.getAllProperties = getAllProperties;
 /**
  * Add a property to the database
  * @param {{}} property An object containing all of the property details.
- * @return {Promise<{}>} A promise to the property.
+ * OBJECT.VALUES ARRAY: 1 title, 2 description, 3 number_of_bedrooms, 4 number_of_bathrooms, 5 parking_spaces, 6 cost_per_night, 7 thumbnail_photo_url, 8 cover_photo_url, 9 street, 10 country, 11 city, 12 province, 13 post_code, 14 owner_id
  */
-const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+const addProperty = property => {
+  return pool.query(`
+  INSERT INTO properties (title, description, number_of_bedrooms, number_of_bathrooms, parking_spaces, cost_per_night, thumbnail_photo_url, cover_photo_url, street, country, city, province, post_code, owner_id)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  RETURNING *;
+  `, Object.values(property))
+    .then(res => console.log(res.rows[0]))
+    .catch(err => console.error(err));
 };
 exports.addProperty = addProperty;
